@@ -1,21 +1,29 @@
 package com.example.aplicacionmovil.screens
 
+import android.content.Context
+import android.hardware.camera2.CameraManager
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.aplicacionmovil.R
 import com.example.aplicacionmovil.data.remote.dto.UserDto
 import com.example.aplicacionmovil.screens.home.SensorUiState
 import com.example.aplicacionmovil.screens.home.SensorViewModel
@@ -25,12 +33,28 @@ import com.example.aplicacionmovil.screens.login.AuthState
 import com.example.aplicacionmovil.screens.login.AuthViewModel
 import com.example.aplicacionmovil.ui.theme.AplicacionMovilTheme
 
+// Función auxiliar para encender/apagar linterna
+private fun toggleTorch(context: Context, isOn: Boolean) {
+    try {
+        val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        val cameraId = cameraManager.cameraIdList[0] // Usualmente la cámara trasera es 0
+        cameraManager.setTorchMode(cameraId, isOn)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
 @Composable
 fun HomeContent(
     authState: AuthState,
     sensorState: SensorUiState,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onAdminClick: () -> Unit,
+    onPerfilClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val isBulbOn = remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,8 +78,33 @@ fun HomeContent(
             )
             Spacer(Modifier.height(20.dp))
         }
+        
+        // Botón Perfil Desarrollador
+        Button(
+            onClick = onPerfilClick,
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+        ) {
+            Text("Ver Perfil Desarrollador")
+        }
+        
+        Spacer(Modifier.height(20.dp))
 
-        // 2) Estado de sensores
+        // 2) Ampolleta / Linterna
+        Image(
+            painter = painterResource(if (isBulbOn.value) R.drawable.bulb_on else R.drawable.bulb_off),
+            contentDescription = null,
+            modifier = Modifier
+                .size(80.dp)
+                .clickable {
+                    isBulbOn.value = !isBulbOn.value
+                    toggleTorch(context, isBulbOn.value)
+                }
+        )
+        Text(text = if (isBulbOn.value) "Ampolleta encendida" else "Ampolleta apagada")
+        
+        Spacer(Modifier.height(20.dp))
+
+        // 3) Estado de sensores
         if (sensorState.isLoading && sensorState.temperature == null) {
             Text("Cargando datos de sensores...")
             Spacer(Modifier.height(12.dp))
@@ -70,7 +119,7 @@ fun HomeContent(
             Spacer(Modifier.height(12.dp))
         }
 
-        // 3) Temperatura
+        // 4) Temperatura
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -90,7 +139,7 @@ fun HomeContent(
             }
         }
 
-        // 4) Humedad
+        // 5) Humedad
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -110,7 +159,7 @@ fun HomeContent(
             }
         }
 
-        // 5) Última actualización
+        // 6) Última actualización
         sensorState.lastUpdate?.let { last ->
             Spacer(Modifier.height(8.dp))
             Text(
@@ -121,7 +170,18 @@ fun HomeContent(
 
         Spacer(Modifier.height(32.dp))
 
-        // 6) Botón de logout
+        // 7) Botón Admin (Gestión de Usuarios)
+        Button(
+            onClick = onAdminClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+        ) {
+            Text("Gestión de Usuarios")
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        // 8) Botón de logout
         Button(
             onClick = onLogout,
             modifier = Modifier.fillMaxWidth()
@@ -135,7 +195,9 @@ fun HomeContent(
 fun HomeScreen(
     vm: AuthViewModel = viewModel(),
     sensorVm: SensorViewModel = viewModel(),
-    onLogoutDone: () -> Unit
+    onLogoutDone: () -> Unit,
+    onAdminClick: () -> Unit,
+    onPerfilClick: () -> Unit
 ) {
     val authState by vm.authState.collectAsState()
     val sensorState = sensorVm.uiState.value
@@ -150,7 +212,9 @@ fun HomeScreen(
     HomeContent(
         authState = authState,
         sensorState = sensorState,
-        onLogout = { vm.logout() }
+        onLogout = { vm.logout() },
+        onAdminClick = onAdminClick,
+        onPerfilClick = onPerfilClick
     )
 }
 
@@ -174,7 +238,9 @@ fun HomeScreenPreview() {
                 lastUpdate = "2025-11-22 18:30",
                 errorMessage = null
             ),
-            onLogout = {}
+            onLogout = {},
+            onAdminClick = {},
+            onPerfilClick = {}
         )
     }
 }

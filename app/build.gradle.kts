@@ -74,8 +74,8 @@ dependencies {
     // Navegación
     implementation("androidx.navigation:navigation-compose:2.8.3")
     
-    // Lottie (Opcional)
-    implementation("com.airbnb.android:lottie-compose:6.4.0")
+    // Lottie
+    implementation("com.airbnb.android:lottie-compose:6.3.0")
     
     // Testing en Debug (para Previews)
     debugImplementation("androidx.navigation:navigation-testing:2.8.3")

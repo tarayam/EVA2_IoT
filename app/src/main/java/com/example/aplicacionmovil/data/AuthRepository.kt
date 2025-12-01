@@ -4,8 +4,11 @@ import android.content.Context
 import com.example.aplicacionmovil.data.local.TokenStorage
 import com.example.aplicacionmovil.data.remote.AuthApi
 import com.example.aplicacionmovil.data.remote.HttpClient
+import com.example.aplicacionmovil.data.remote.dto.ForgotPasswordRequest
 import com.example.aplicacionmovil.data.remote.dto.LoginRequest
 import com.example.aplicacionmovil.data.remote.dto.LoginResponse
+import com.example.aplicacionmovil.data.remote.dto.ResetPasswordRequest
+import com.example.aplicacionmovil.data.remote.dto.SimpleResponse
 import com.example.aplicacionmovil.data.remote.dto.UserDto
 
 class AuthRepository(
@@ -49,6 +52,33 @@ class AuthRepository(
             val user = api.profile("Bearer $token")
 
             Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // ---------- RECUPERACIÓN PASSWORD ----------
+    suspend fun forgotPassword(email: String): Result<String> {
+        return try {
+            val res = api.forgotPassword(ForgotPasswordRequest(email))
+            if (res.success) {
+                Result.success(res.message)
+            } else {
+                Result.failure(Exception(res.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun resetPassword(email: String, code: String, newPass: String): Result<String> {
+        return try {
+            val res = api.resetPassword(ResetPasswordRequest(email, code, newPass))
+            if (res.success) {
+                Result.success(res.message)
+            } else {
+                Result.failure(Exception(res.message))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }

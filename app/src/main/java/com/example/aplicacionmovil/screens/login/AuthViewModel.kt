@@ -74,4 +74,25 @@ class AuthViewModel(
             _authState.value = AuthState.Unauthenticated
         }
     }
+
+    // ----- RECUPERACIÓN CONTRASEÑA -----
+    fun forgotPassword(email: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            val res = repo.forgotPassword(email)
+            res.fold(
+                onSuccess = { onResult(true, it) },
+                onFailure = { onResult(false, it.message ?: "Error desconocido") }
+            )
+        }
+    }
+
+    fun resetPassword(email: String, code: String, newPass: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            val res = repo.resetPassword(email, code, newPass)
+            res.fold(
+                onSuccess = { onResult(true, it) },
+                onFailure = { onResult(false, it.message ?: "Error desconocido") }
+            )
+        }
+    }
 }

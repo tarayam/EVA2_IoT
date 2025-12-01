@@ -28,7 +28,8 @@ fun LoginContent(
     onEmailChange: (String) -> Unit,
     onPassChange: (String) -> Unit,
     onLoginClick: () -> Unit,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
     val isLoading = authState is AuthState.Checking
     val errorMessage = (authState as? AuthState.Error)?.message
@@ -77,6 +78,14 @@ fun LoginContent(
             modifier = Modifier.fillMaxWidth()
         )
 
+        // Enlace "Olvidé mi contraseña"
+        TextButton(
+            onClick = onForgotPasswordClick,
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("¿Olvidaste tu contraseña?")
+        }
+
         Spacer(Modifier.height(16.dp))
 
         Button(
@@ -92,9 +101,11 @@ fun LoginContent(
             Text(errorMessage, color = MaterialTheme.colorScheme.error)
         }
 
+        Spacer(Modifier.height(16.dp))
+
         TextButton(
             onClick = onRegisterClick,
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("¿No tienes cuenta? Regístrate")
         }
@@ -127,7 +138,8 @@ fun LoginScreen(
         onEmailChange = { email = it },
         onPassChange = { pass = it },
         onLoginClick = { vm.login(email.trim(), pass) },
-        onRegisterClick = { nav.navigate(Route.Register.path) }
+        onRegisterClick = { nav.navigate(Route.Register.path) },
+        onForgotPasswordClick = { nav.navigate(Route.ForgotPassword.path) }
     )
 }
 
@@ -142,7 +154,8 @@ fun LoginContentPreview() {
             onEmailChange = {},
             onPassChange = {},
             onLoginClick = {},
-            onRegisterClick = {}
+            onRegisterClick = {},
+            onForgotPasswordClick = {}
         )
     }
 }

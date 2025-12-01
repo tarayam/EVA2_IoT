@@ -36,4 +36,7 @@ object HttpClient {
 
     // 👉 NUEVO: API de sensores
     val sensorApi: SensorApi = retrofit.create(SensorApi::class.java)
+
+    // 👉 NUEVO: API de usuarios
+    val userApi: UserApi = retrofit.create(UserApi::class.java)
 }

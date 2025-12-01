@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.AplicacionMovil" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
+        <!-- Ícono grande del splash -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/galaxycar</item>
+        <!-- Color de fondo del splash -->
+        <item name="windowSplashScreenBackground">@color/purple_700</item>
+        <!-- (Opcional) Duración si agregas icono animado de compat -->
+        <item name="postSplashScreenTheme">@style/Theme.AplicacionMovil</item>
+    </style>
+    <style name="Theme.App" parent="Theme.Material3.DayNight.NoActionBar" />
+</resources>

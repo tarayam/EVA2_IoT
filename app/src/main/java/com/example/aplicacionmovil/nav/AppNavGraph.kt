@@ -35,16 +35,10 @@ fun AppNavGraph(
             SplashScreen(navController = nav)
             
             // Verificación de sesión
-            LaunchedEffect(authState) {
-                if (authState is AuthState.Authenticated) {
-                     nav.navigate(Route.Home.path) {
-                        popUpTo(Route.Splash.path) { inclusive = true }
-                    }
-                }
-            }
+
         }
 
-        // 2. AUTH (LOGIN, REGISTER, RECOVERY)
+         //2. AUTH (LOGIN, REGISTER, RECOVERY)
         composable(Route.Login.path) {
             LoginScreen(nav = nav, vm = vm)
         }

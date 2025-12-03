@@ -48,20 +48,24 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    
+    // Iconos extendidos de Material (necesario para VisibilityOff)
+    implementation("androidx.compose.material:material-icons-extended:1.7.5")
+
     // Retrofit para llamadas HTTP
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
 
-// Moshi para JSON
+    // Moshi para JSON
     implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
 
-// OkHttp logging (para ver requests/responses en Logcat)
+    // OkHttp logging (para ver requests/responses en Logcat)
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-// ViewModel
+    // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
 
-// DataStore Preferences
+    // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.1.7")
 
 

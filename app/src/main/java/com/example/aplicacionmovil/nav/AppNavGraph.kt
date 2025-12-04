@@ -17,6 +17,7 @@ import com.example.aplicacionmovil.screens.users.ListarUsuariosScreen
 import com.example.aplicacionmovil.screens.users.ModificarUsuarioScreen
 import com.example.aplicacionmovil.screens.users.RegistrarUsuarioScreen
 import com.example.aplicacionmovil.screens.users.UserViewModel
+import com.example.aplicacionmovil.screens.users.UserManagementScreen
 
 @Composable
 fun AppNavGraph(
@@ -75,10 +76,13 @@ fun AppNavGraph(
         }
 
         // 4. USUARIOS (CRUD)
+        // AQUI SE USA LA NUEVA PANTALLA UserManagementScreen en lugar de ListarUsuariosScreen
         composable(Route.ListUsers.path) {
-            ListarUsuariosScreen(nav, userVm)
+            UserManagementScreen(nav, userVm)
         }
         
+        // Estas rutas pueden quedar obsoletas si UserManagementScreen maneja todo internamente, 
+        // pero las dejamos por si acaso o si decides volver al método anterior.
         composable(Route.CreateUser.path) {
             RegistrarUsuarioScreen(nav, userVm)
         }

@@ -18,7 +18,15 @@ fun ModificarUsuarioScreen(
     currentName: String,
     currentEmail: String
 ) {
-    var name by remember { mutableStateOf(currentName) }
+    // Intentamos separar nombre y apellido si vienen juntos en 'currentName'
+    // OJO: Si usas navegación pasando argumentos, quizás debas pasar 'currentLastName' también
+    // Por ahora, asumimos que 'currentName' podría traer todo junto y lo separamos simple.
+    val parts = currentName.split(" ")
+    val initName = if (parts.isNotEmpty()) parts[0] else ""
+    val initLastName = if (parts.size > 1) parts.drop(1).joinToString(" ") else ""
+
+    var name by remember { mutableStateOf(initName) }
+    var lastName by remember { mutableStateOf(initLastName) }
     var email by remember { mutableStateOf(currentEmail) }
     var pass by remember { mutableStateOf("") } // Contraseña opcional
     
@@ -37,6 +45,13 @@ fun ModificarUsuarioScreen(
             value = name, 
             onValueChange = { name = it }, 
             label = { Text("Nombre") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(12.dp))
+        OutlinedTextField(
+            value = lastName, 
+            onValueChange = { lastName = it }, 
+            label = { Text("Apellido") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(12.dp))
@@ -61,8 +76,9 @@ fun ModificarUsuarioScreen(
         } else {
             Button(
                 onClick = {
-                    val newPass = if (pass.isBlank()) null else pass
-                    vm.updateUser(userId, name, email, newPass) { success ->
+                    val newPass = pass.ifBlank { null }
+                    // Ahora llamamos a updateUser con lastName
+                    vm.updateUser(userId, name, lastName, email, newPass) { success ->
                         if (success) nav.popBackStack()
                     }
                 },

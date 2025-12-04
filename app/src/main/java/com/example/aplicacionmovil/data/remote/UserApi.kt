@@ -1,5 +1,6 @@
 package com.example.aplicacionmovil.data.remote
 
+import com.example.aplicacionmovil.data.remote.dto.CreateUserResponse
 import com.example.aplicacionmovil.data.remote.dto.ForgotPasswordResponse
 import com.example.aplicacionmovil.data.remote.dto.UserDto
 import com.example.aplicacionmovil.data.remote.dto.UserRequest
@@ -16,8 +17,8 @@ interface UserApi {
     @GET("users/{id}")
     suspend fun getUserById(@Path("id") id: Int): UserDto
 
-    @POST("users")
-    suspend fun createUser(@Body user: UserRequest): UserDto
+    @POST("auth/register") 
+    suspend fun createUser(@Body user: UserRequest): CreateUserResponse // Cambiado a CreateUserResponse
 
     @PUT("users/{id}")
     suspend fun updateUser(@Path("id") id: Int, @Body user: UserRequest): UserDto

@@ -2,7 +2,6 @@ package com.example.aplicacionmovil.data
 
 import com.example.aplicacionmovil.data.remote.HttpClient
 import com.example.aplicacionmovil.data.remote.UserApi
-//import com.example.aplicacionmovil.data.remote.dto.SimpleResponse
 import com.example.aplicacionmovil.data.remote.dto.UserDto
 import com.example.aplicacionmovil.data.remote.dto.UserRequest
 
@@ -30,8 +29,8 @@ class UserRepository(
 
     suspend fun createUser(user: UserRequest): Result<UserDto> {
         return try {
-            val newUser = api.createUser(user)
-            Result.success(newUser)
+            val response = api.createUser(user)
+            Result.success(response.user) // Devolvemos el UserDto que viene dentro de la respuesta
         } catch (e: Exception) {
             Result.failure(e)
         }
